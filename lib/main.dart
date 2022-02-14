@@ -4,7 +4,7 @@ import 'package:movies/widgets/appdrawer.dart';
 import 'package:movies/widgets/filmcard.dart';
 import './themes.dart' show ThemeModel, light, dark;
 import 'package:provider/provider.dart';
-import './usersettings.dart';
+import 'usersettings.dart';
 
 void main() {
   runApp(MyApp());
@@ -78,97 +78,97 @@ class _HomePageState extends State<HomePage> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //     GestureDetector(
-                      //         onTap: () {
-                      //           _filtersChanged = false;
-                      //           setState(() {});
-                      //         },
-                      //         child: AnimatedContainer(
-                      //             alignment: Alignment.center,
-                      //             width: 200,
-                      //             decoration: BoxDecoration(
-                      //               borderRadius: BorderRadius.circular(20),
-                      //               color: _filtersChanged
-                      //                   ? Theme.of(context).primaryColor
-                      //                   : Colors.black.withOpacity(1),
-                      //             ),
-                      //             height: _filtersChanged ? 40 : 0,
-                      //             duration: Duration(milliseconds: 300),
-                      //             child: _filtersChanged
-                      //                 ? Text('Search With Filters')
-                      //                 : Container())),
-                      //     Padding(
-                      //       padding: const EdgeInsets.all(20.0),
-                      //       child: Text(
-                      //         'Filters',
-                      //         style: TextStyle(fontSize: 20),
-                      //       ),
-                      //     ),
-                      //     IconButton(
-                      //         onPressed: () {
-                      //           setState(() {
-                      //             _filters = !_filters;
-                      //           });
-                      //         },
-                      //         icon: Icon(Icons.settings_suggest_outlined))
-                      //   ],
-                      // ),
-                      // AnimatedContainer(
-                      //   padding: EdgeInsets.all(20),
-                      //   duration: Duration(milliseconds: 300),
-                      //   height: !_filters
-                      //       ? 0
-                      //       : MediaQuery.of(context).size.height * 0.5,
-                      //   curve: Curves.fastOutSlowIn,
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(20),
-                      //     color:
-                      //         Theme.of(context).brightness == Brightness.light
-                      //             ? Colors.grey[350]
-                      //             : Colors.grey[800],
-                      //   ),
-                      //   child: GridView.builder(
-                      //       gridDelegate:
-                      //           const SliverGridDelegateWithFixedCrossAxisCount(
-                      //         crossAxisCount: 3,
-                      //       ),
-                      //       itemCount: genres.keys.length,
-                      //       itemBuilder: (BuildContext context, int index) {
-                      //         return Padding(
-                      //           padding: const EdgeInsets.all(8.0),
-                      //           child: GestureDetector(
-                      //             onTap: () {
-                      //               userGenres.contains(
-                      //                       genres[genres.keys.toList()[index]])
-                      //                   ? userGenres.remove(
-                      //                       genres[genres.keys.toList()[index]])
-                      //                   : userGenres.add(genres[
-                      //                       genres.keys.toList()[index]]);
-                      //               _filtersChanged = true;
-                      //               setState(() {});
-                      //             },
-                      //             child: AnimatedContainer(
-                      //               duration: Duration(milliseconds: 300),
-                      //               decoration: BoxDecoration(
-                      //                   color: userGenres.contains(genres[
-                      //                           genres.keys.toList()[index]])
-                      //                       ? Theme.of(context).primaryColor
-                      //                       : Colors.black,
-                      //                   borderRadius: BorderRadius.circular(20),
-                      //                   border: Border.all(
-                      //                       color: Theme.of(context)
-                      //                           .primaryColor)),
-                      //               child: Center(
-                      //                   child: Text(
-                      //                       '${genres.keys.toList()[index]}')),
-                      //             ),
-                      //           ),
-                      //         );
-                      //       }),
-                      // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                _filtersChanged = false;
+                                getData();
+                              },
+                              child: AnimatedContainer(
+                                  alignment: Alignment.center,
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: _filtersChanged
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.black.withOpacity(1),
+                                  ),
+                                  height: _filtersChanged ? 40 : 0,
+                                  duration: Duration(milliseconds: 300),
+                                  child: _filtersChanged
+                                      ? Text('Implement Filters')
+                                      : Container())),
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              'Filters',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _filters = !_filters;
+                                });
+                              },
+                              icon: Icon(Icons.settings_suggest_outlined))
+                        ],
+                      ),
+                      AnimatedContainer(
+                        padding: EdgeInsets.all(20),
+                        duration: Duration(milliseconds: 300),
+                        height: !_filters
+                            ? 0
+                            : MediaQuery.of(context).size.height * 0.5,
+                        curve: Curves.fastOutSlowIn,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.grey[350]
+                                  : Colors.grey[800],
+                        ),
+                        child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                            ),
+                            itemCount: genres.keys.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    userGenres.contains(
+                                            genres[genres.keys.toList()[index]])
+                                        ? userGenres.remove(
+                                            genres[genres.keys.toList()[index]])
+                                        : userGenres.add(genres[
+                                            genres.keys.toList()[index]]);
+                                    _filtersChanged = true;
+                                    setState(() {});
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: Duration(milliseconds: 300),
+                                    decoration: BoxDecoration(
+                                        color: userGenres.contains(genres[
+                                                genres.keys.toList()[index]])
+                                            ? Theme.of(context).primaryColor
+                                            : Colors.black,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                            color: Theme.of(context)
+                                                .primaryColor)),
+                                    child: Center(
+                                        child: Text(
+                                            '${genres.keys.toList()[index]}')),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
                       // TextField(
                       //   onSubmitted: (query) =>
                       //       searchByQuery(query).then((value) {

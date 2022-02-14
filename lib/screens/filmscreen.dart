@@ -3,6 +3,7 @@ import 'package:movies/widgets/rewiew_card.dart';
 import '../models/film.dart';
 import 'package:flutter_glow/flutter_glow.dart';
 import '../api.dart';
+import 'package:movies/usersettings.dart';
 
 class FilmScreen extends StatefulWidget {
   Film film;
@@ -95,6 +96,17 @@ class _FilmScreenState extends State<FilmScreen> {
                         ],
                       ),
                     ),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      ...widget.film.genre_ids.map((x) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              genres.keys.firstWhere(
+                                  (element) => genres[element] == x),
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w300),
+                            ),
+                          ))
+                    ]),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
