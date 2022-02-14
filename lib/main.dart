@@ -156,7 +156,10 @@ class _HomePageState extends State<HomePage> {
                                         color: userGenres.contains(genres[
                                                 genres.keys.toList()[index]])
                                             ? Theme.of(context).primaryColor
-                                            : Colors.black,
+                                            : Theme.of(context).brightness ==
+                                                    Brightness.light
+                                                ? Colors.white
+                                                : Colors.black,
                                         borderRadius: BorderRadius.circular(20),
                                         border: Border.all(
                                             color: Theme.of(context)
