@@ -1,16 +1,35 @@
-# movies
+# Movies application
+![Stage:  - Development](https://img.shields.io/badge/Stage%3A_-Development-red)
+![Framework - Flutter](https://img.shields.io/badge/Framework-Flutter-14dbc1)
+[![API - moviesAPI](https://img.shields.io/badge/API-moviesAPI-991590)](https://developers.themoviedb.org/3/getting-started/introduction)
 
-A new Flutter project.
+![Android - Build Passed](https://img.shields.io/badge/Android-Build_Passed-0bd622)
+![IOS - Not Done Yet](https://img.shields.io/badge/IOS-Not_Done_Yet-red)
+![Desktop - Not Done Yet](https://img.shields.io/badge/Desktop-Not_Done_Yet-red)
+## Main idea of the project
+This app was made to make people happier. Imagine you come home from work/school/university and you are very tired. You know how to goole so you can find all films online for free, but to know what to google, you need to choose a film first. And instead of reading bad, short reviews on random website you can just open the app with great UX and find film to watch, isn't that good idea?
 
-## Getting Started
+## Where can I find build of application?
+It will be published to [this website](https://anoobisthegod.github.io/site/megaunicorns/), there you can find latest build for the android<br>
+IOS version is not available for now and also I don't know how will you install IOS build from website, so I will not publish it.
 
-This project is a starting point for a Flutter application.
+## How this works?
+App gets data with api.dart file using [movieAPI](https://www.themoviedb.org/).
+Then app reduces data into lists of objects and maps and shows it to user but wrapped in wigdgets
 
-A few resources to get you started if this is your first Flutter project:
+## To run this app: 
+1) git clone this repo
+2) install flutter(if not installed)
+3) cd \<project folder>
+4) flutter run 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## How to contribute?
+<ul>
+<li> Fork this repo
+<li> Run the app
+<li> Insert feature you want to add
+<li> Update your fork on github
+<li> Make pull request
+</ul>
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Also if you have any suggestions about this application or you found a bug, DM me in discord: aNOOBis#9315

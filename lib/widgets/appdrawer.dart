@@ -13,20 +13,27 @@ class _AppDrawerState extends State<AppDrawer> {
     return Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
       return Drawer(
-        child: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          automaticallyImplyLeading: false,
-          title: Text(themeNotifier.isDark ? "Dark Mode" : "Light Mode"),
-          actions: [
-            IconButton(
-                icon: Icon(themeNotifier.isDark
-                    ? Icons.nightlight_round
-                    : Icons.wb_sunny),
-                onPressed: () {
-                  themeNotifier.isDark
-                      ? themeNotifier.isDark = false
-                      : themeNotifier.isDark = true;
-                })
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : Colors.white,
+        child: Column(
+          children: [
+            AppBar(
+              backgroundColor: Theme.of(context).primaryColor,
+              automaticallyImplyLeading: false,
+              title: Text(themeNotifier.isDark ? "Dark Mode" : "Light Mode"),
+              actions: [
+                IconButton(
+                    icon: Icon(themeNotifier.isDark
+                        ? Icons.nightlight_round
+                        : Icons.wb_sunny),
+                    onPressed: () {
+                      themeNotifier.isDark
+                          ? themeNotifier.isDark = false
+                          : themeNotifier.isDark = true;
+                    })
+              ],
+            ),
           ],
         ),
       );
