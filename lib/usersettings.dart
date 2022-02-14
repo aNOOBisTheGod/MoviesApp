@@ -1,0 +1,2 @@
+Map genres = {};
+List userGenres = [];
