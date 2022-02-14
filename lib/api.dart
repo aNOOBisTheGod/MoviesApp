@@ -27,7 +27,7 @@ Future<List> getPopular(page) async {
 Future<List> genreSearch(page) async {
   String genres = userGenres.join(',');
   http.Response response = await http.get(Uri.parse(
-      'https://api.themoviedb.org/3/discover/movie?api_key=$apikey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=$genres&with_watch_monetization_types=free'));
+      'https://api.themoviedb.org/3/discover/movie?api_key=$apikey&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=$page&with_genres=$genres&with_watch_monetization_types=free'));
   Map res = json.decode(response.body);
   List films = res['results'];
 

@@ -96,17 +96,26 @@ class _FilmScreenState extends State<FilmScreen> {
                         ],
                       ),
                     ),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      ...widget.film.genre_ids.map((x) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              genres.keys.firstWhere(
-                                  (element) => genres[element] == x),
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w300),
-                            ),
-                          ))
-                    ]),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: GridView.count(
+                          physics: NeverScrollableScrollPhysics(),
+                          childAspectRatio: 3,
+                          shrinkWrap: true,
+                          crossAxisCount: 3,
+                          children: [
+                            ...widget.film.genre_ids.map((x) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    genres.keys.firstWhere(
+                                        (element) => genres[element] == x),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                ))
+                          ]),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
