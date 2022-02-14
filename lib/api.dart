@@ -5,7 +5,6 @@ import './usersettings.dart';
 import './private.dart' show apikey;
 
 Future<List> getPopular(page) async {
-  print('ok');
   http.Response response = await http.get(Uri.parse(
       'https://api.themoviedb.org/3/trending/all/day?api_key=$apikey&page=$page'));
   Map res = json.decode(response.body);
@@ -49,4 +48,13 @@ Future<List> searchByQuery(query) async {
     }
   }
   return result;
+}
+
+Future<List> getReviews(int id) async {
+  print(
+      'https://api.themoviedb.org/3/movie/$id/reviews?api_key=$apikey&language=en-US&page=1');
+  http.Response response = await http.get(Uri.parse(
+      'https://api.themoviedb.org/3/movie/$id/reviews?api_key=$apikey&language=en-US&page=1'));
+  Map res = json.decode(response.body);
+  return res['results'];
 }
