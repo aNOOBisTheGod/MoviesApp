@@ -3,6 +3,7 @@ import 'package:movies/widgets/rewiew_card.dart';
 import '../models/film.dart';
 import 'package:flutter_glow/flutter_glow.dart';
 import '../api.dart';
+import 'package:movies/usersettings.dart';
 
 class FilmScreen extends StatefulWidget {
   Film film;
@@ -57,20 +58,32 @@ class _FilmScreenState extends State<FilmScreen> {
                               icon: Icon(Icons.close)),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: GlowText(
-                          widget.film.title,
-                          blurRadius: 10,
-                          glowColor: Theme.of(context).primaryColor,
-                          style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.light
-                                  ? Colors.black
-                                  : Colors.white,
-                              fontSize: 50,
-                              fontWeight: FontWeight.bold),
-                        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: GridView.count(
+                          physics: NeverScrollableScrollPhysics(),
+                          childAspectRatio: 3,
+                          shrinkWrap: true,
+                          crossAxisCount: 3,
+                          children: [
+                            ...widget.film.genre_ids.map((x) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    genres.keys.firstWhere(
+                                        (element) => genres[element] == x),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                ))
+                          ]),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        widget.film.overview,
+                        style: TextStyle(fontSize: 20),
                       ),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
