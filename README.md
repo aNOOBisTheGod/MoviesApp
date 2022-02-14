@@ -1,5 +1,5 @@
 # Movies application
-![Stage  - Development](https://img.shields.io/badge/Stage%3A_-Development-red)
+![Stage - Development](https://img.shields.io/badge/Stage-Development-red)
 ![Framework - Flutter](https://img.shields.io/badge/Framework-Flutter-14dbc1)
 [![API - moviesAPI](https://img.shields.io/badge/API-moviesAPI-991590)](https://developers.themoviedb.org/3/getting-started/introduction)
 [![Download - Website](https://img.shields.io/badge/Download-Website-ff7300)](https://anoobisthegod.github.io/site/megaunicorns/)
