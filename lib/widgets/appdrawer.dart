@@ -45,7 +45,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   onPressed: () => Navigator.of(context)
                       .pushNamed(FavouritesScreeen.routeName),
                   child: Row(
-                    children: [Icon(Icons.star), Text('Favourite')],
+                    children: [Icon(Icons.star), Text('Favourites')],
                   )),
             )
           ],

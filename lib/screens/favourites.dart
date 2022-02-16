@@ -36,24 +36,35 @@ class _FavouritesScreeenState extends State<FavouritesScreeen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: _isloading
-          ? Center(
-              child: CircularProgressIndicator(
-                  backgroundColor: Theme.of(context).primaryColor),
-            )
-          : Container(
-              child: SingleChildScrollView(
-                child: ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    return FilmCard(data[index]);
-                  },
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                ),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('Favourite films'),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black
+                : Colors.white),
+        child: _isloading
+            ? Center(
+                child: CircularProgressIndicator(
+                    backgroundColor: Theme.of(context).primaryColor),
+              )
+            : Column(
+                children: [
+                  SingleChildScrollView(
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        return FilmCard(data[index]);
+                      },
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                    ),
+                  ),
+                ],
               ),
-            ),
+      ),
     );
   }
 }

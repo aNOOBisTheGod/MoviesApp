@@ -96,7 +96,9 @@ class _FilmScreenState extends State<FilmScreen> {
                                   onPressed: () => Navigator.of(context).pop(),
                                   icon: Icon(Icons.close)),
                               IconButton(
-                                  color: Colors.grey[600],
+                                  color: _isFavourite
+                                      ? Colors.grey[600]
+                                      : Theme.of(context).primaryColor,
                                   onPressed: () => changeFavourites(),
                                   icon: Icon(Icons.star)),
                             ],
