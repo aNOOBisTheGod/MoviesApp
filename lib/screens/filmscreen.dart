@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:movies/widgets/rewiew_card.dart';
 import '../models/film.dart';
 import 'package:flutter_glow/flutter_glow.dart';
 import '../api.dart';
 import 'package:movies/usersettings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FilmScreen extends StatefulWidget {
   Film film;
@@ -16,6 +19,7 @@ class FilmScreen extends StatefulWidget {
 class _FilmScreenState extends State<FilmScreen> {
   List? reviews;
   bool _isLoading = true;
+  bool _isFavourite = false;
   @override
   void initState() {
     getData();
@@ -27,6 +31,38 @@ class _FilmScreenState extends State<FilmScreen> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  Future<bool> checkFavourites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? prefav = prefs.getString('favourite');
+    List fav = json.decode(prefav!);
+    for (int e in fav) {
+      if (e == widget.film.id) {
+        setState(() {
+          _isFavourite = true;
+        });
+        return true;
+      }
+    }
+    setState(() {
+      _isFavourite = false;
+    });
+    return false;
+  }
+
+  void changeFavourites() async {
+    print(100);
+    final prefs = await SharedPreferences.getInstance();
+    final String? prefav = prefs.getString('favourite');
+    List fav = json.decode(prefav!);
+    if (!await checkFavourites()) {
+      fav.add(widget.film.id);
+    } else {
+      fav.remove(widget.film.id);
+    }
+    await prefs.setString('favourite', json.encode(fav));
+    print(prefs.getString('favourite'));
   }
 
   @override
@@ -52,10 +88,19 @@ class _FilmScreenState extends State<FilmScreen> {
                         children: [
                           Image.network('https://image.tmdb.org/t/p/w500/' +
                               widget.film.backdrop_path),
-                          IconButton(
-                              color: Colors.grey[600],
-                              onPressed: () => Navigator.of(context).pop(),
-                              icon: Icon(Icons.close)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                  color: Colors.grey[600],
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  icon: Icon(Icons.close)),
+                              IconButton(
+                                  color: Colors.grey[600],
+                                  onPressed: () => changeFavourites(),
+                                  icon: Icon(Icons.star)),
+                            ],
+                          ),
                         ],
                       ),
                       Padding(

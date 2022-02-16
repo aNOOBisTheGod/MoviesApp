@@ -52,4 +52,21 @@ class Film {
         video = json['video'] is bool ? json['video'] : false,
         release_date =
             json['release_date'] is String ? json['release_date'] : '';
+  Map toJson() => {
+        'id': id,
+        'genre_ids': genre_ids,
+        'vote_count': votes,
+        'backdrop_path': backdrop_path,
+        'poster_path': poster,
+        'original_language': original_language,
+        'original_title': original_title,
+        'title': title,
+        'vote_average': vote_average,
+        'media_type': media_type,
+        'overview': overview,
+        'adult': adult,
+        'popularity': popularity,
+        'video': video,
+        'release_date': release_date
+      };
 }

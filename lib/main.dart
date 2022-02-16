@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies/api.dart';
+import 'package:movies/screens/favourites.dart';
 import 'package:movies/widgets/appdrawer.dart';
 import 'package:movies/widgets/filmcard.dart';
 import './themes.dart' show ThemeModel, light, dark;
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
           theme: themeNotifier.isDark ? dark : light,
           debugShowCheckedModeBanner: false,
           home: HomePage(1),
+          routes: {FavouritesScreeen.routeName: (ctx) => FavouritesScreeen()},
         );
       }),
     );

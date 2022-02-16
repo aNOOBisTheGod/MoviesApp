@@ -76,3 +76,11 @@ Future<List> getReviews(int id) async {
   Map res = json.decode(response.body);
   return res['results'];
 }
+
+Future<Film> getFilm(int id) async {
+  http.Response response = await http.get(Uri.parse(
+      'https://api.themoviedb.org/3/movie/$id?api_key=$apikey&language=en-US'));
+  Map<String, dynamic> res = json.decode(response.body);
+  Film film = Film.fromJson(res);
+  return film;
+}
