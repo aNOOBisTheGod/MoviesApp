@@ -22,6 +22,7 @@ class _FilmScreenState extends State<FilmScreen> {
   bool _isFavourite = false;
   @override
   void initState() {
+    checkFavourites();
     getData();
     super.initState();
   }
@@ -61,6 +62,7 @@ class _FilmScreenState extends State<FilmScreen> {
     } else {
       fav.remove(widget.film.id);
     }
+    checkFavourites();
     await prefs.setString('favourite', json.encode(fav));
     print(prefs.getString('favourite'));
   }
@@ -97,8 +99,8 @@ class _FilmScreenState extends State<FilmScreen> {
                                   icon: Icon(Icons.close)),
                               IconButton(
                                   color: _isFavourite
-                                      ? Colors.grey[600]
-                                      : Theme.of(context).primaryColor,
+                                      ? Theme.of(context).primaryColor
+                                      : Colors.grey[600],
                                   onPressed: () => changeFavourites(),
                                   icon: Icon(Icons.star)),
                             ],
