@@ -1,10 +1,11 @@
+![image](https://user-images.githubusercontent.com/69043738/154845392-115b8f86-70e0-4e1e-8147-25f637650314.jpg)
+
 # Movies application
 
-[![Download - Website](https://img.shields.io/badge/Download-Website-fc0394)](https://anoobisthegod.github.io/site/megaunicorns/)
+[![Download - Website](https://img.shields.io/badge/Download-Website-ff7300)](https://anoobisthegod.github.io/site/megaunicorns/)
 ![Stage:  - Development](https://img.shields.io/badge/Stage%3A_-Development-red)
 ![Framework - Flutter](https://img.shields.io/badge/Framework-Flutter-14dbc1)
 [![API - moviesAPI](https://img.shields.io/badge/API-moviesAPI-991590)](https://developers.themoviedb.org/3/getting-started/introduction)
-[![Download - Website](https://img.shields.io/badge/Download-Website-ff7300)](https://anoobisthegod.github.io/site/megaunicorns/)
 
 ![Android - Build Passed](https://img.shields.io/badge/Android-Build_Passed-0bd622)
 ![IOS - Not Done Yet](https://img.shields.io/badge/IOS-Not_Done_Yet-red)
