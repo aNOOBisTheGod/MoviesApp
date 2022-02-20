@@ -21,6 +21,11 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: '2.10.1'
+       - name: Write private.dart
+          run: |
+            touch lib/private.dart
+            echo $PRIVATE >> lib/private.dart
+            cat  assets/config/dev.json
       - run: flutter pub get
       - run: flutter build apk --debug --split-per-abi
       - run: |
