@@ -123,7 +123,7 @@ class _FilmCardState extends State<FilmCard> {
                             'Genres: ${widget.film.genre_ids.map(
                                   (x) => genres.keys.firstWhere(
                                       (element) => genres[element] == x,
-                                      orElse: () => 'Incomprehensible'),
+                                      orElse: () => '._.'),
                                 ).join(', ')}',
                             style: TextStyle(
                               fontSize: 20,
