@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/69043738/154845392-115b8f86-70e0-4e1e-8147-25f637650314.jpg)
+
 # Movies application
 
 [![Download - Website](https://img.shields.io/badge/Download-Website-fc0394)](https://anoobisthegod.github.io/site/megaunicorns/)
