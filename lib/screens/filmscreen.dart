@@ -168,7 +168,7 @@ class _FilmScreenState extends State<FilmScreen> {
                                     child: Text(
                                       genres.keys.firstWhere(
                                           (element) => genres[element] == x,
-                                          orElse: () => null),
+                                          orElse: () => '._.'),
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w300),
