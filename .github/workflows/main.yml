@@ -2,12 +2,9 @@ on:
   pull_request:
     branches:
       - main
-      - master
   push:
     branches:
       - main
-      - master
-      - develop
 env:
   PRIVATE : ${{ secrets.PRIVATE }}
 name: "Build & Release"
