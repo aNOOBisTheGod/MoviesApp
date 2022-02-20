@@ -24,7 +24,7 @@ jobs:
       - run: |
           touch lib/private.dart
           echo $PRIVATE >> lib/private.dart
-          cat  assets/config/dev.json
+          cat  lib/private.dart
       - run: flutter pub get
       - run: flutter build apk --debug --split-per-abi
       - run: |
