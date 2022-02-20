@@ -63,9 +63,7 @@ Future<List> searchByQuery(query) async {
   for (int i = 0; i < films.length; i++) {
     try {
       result.add(Film.fromJson(films[i]));
-    } catch (e) {
-      print(i);
-    }
+    } catch (e) {}
   }
   return result;
 }
