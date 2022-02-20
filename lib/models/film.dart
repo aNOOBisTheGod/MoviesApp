@@ -42,7 +42,11 @@ class Film {
             : '',
         original_title =
             json['original_title'] is String ? json['original_title'] : '',
-        title = json['title'] is String ? json['title'] : '',
+        title = json['title'] is String
+            ? json['title']
+            : json['name'] is String
+                ? json['name']
+                : "",
         vote_average =
             json['vote_average'] is double ? json['vote_average'] : 0,
         media_type = json['media_type'] is String ? json['media_type'] : '',

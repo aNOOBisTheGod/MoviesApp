@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:movies/screens/filmscreen.dart';
 import '../models/film.dart';
+import '../usersettings.dart' show genres;
 
-class FilmCard extends StatelessWidget {
+class FilmCard extends StatefulWidget {
   Film film;
+
   FilmCard(this.film);
-  final Shader linearGradient = LinearGradient(
-    colors: <Color>[Color(0xffDA44bb), Color(0xff8921aa)],
-  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+
+  @override
+  State<FilmCard> createState() => _FilmCardState();
+}
+
+class _FilmCardState extends State<FilmCard> {
+  bool preview = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => FilmScreen(film))),
+      onLongPress: () => setState(() {
+        preview = !preview;
+      }),
+      onTap: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => FilmScreen(widget.film))),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Container(
@@ -36,12 +45,13 @@ class FilmCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.network(
-                'https://image.tmdb.org/t/p/w500/${film.poster}',
+                'https://image.tmdb.org/t/p/w500/${widget.film.poster}',
                 fit: BoxFit.cover,
                 width: MediaQuery.of(context).size.width,
               ),
             ),
-            Container(
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   gradient: LinearGradient(
@@ -49,14 +59,21 @@ class FilmCard extends StatelessWidget {
                       end: FractionalOffset.bottomCenter,
                       colors: [
                         Colors.grey.withOpacity(0.0),
-                        Theme.of(context).primaryColor,
+                        Theme.of(context)
+                            .primaryColor
+                            .withOpacity(preview ? 1 : 0.5),
                       ],
                       stops: [
                         0.0,
                         1.0
                       ])),
             ),
-            Container(
+            AnimatedContainer(
+              curve: Curves.fastOutSlowIn,
+              margin: EdgeInsets.only(
+                  bottom:
+                      preview ? MediaQuery.of(context).size.height * 0.2 : 0),
+              duration: Duration(milliseconds: 300),
               padding: EdgeInsets.all(30),
               width: double.infinity,
               height: double.infinity,
@@ -64,11 +81,60 @@ class FilmCard extends StatelessWidget {
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(20)),
               child: Text(
-                film.title,
+                widget.film.title,
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.start,
               ),
-            )
+            ),
+            preview
+                ? AnimatedContainer(
+                    curve: Curves.fastOutSlowIn,
+                    duration: Duration(milliseconds: 300),
+                    padding: EdgeInsets.all(30),
+                    width: double.infinity,
+                    height: double.infinity,
+                    alignment: Alignment.bottomLeft,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                '${widget.film.vote_average}',
+                                style: TextStyle(fontSize: 20),
+                                textAlign: TextAlign.start,
+                              ),
+                              Icon(Icons.star)
+                            ],
+                          ),
+                          Text(
+                            'Original language: ${widget.film.original_language}',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                          Text(
+                            'Genres: ${widget.film.genre_ids.map(
+                                  (x) => genres.keys.firstWhere(
+                                      (element) => genres[element] == x,
+                                      orElse: () => null),
+                                ).join(', ')}',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Container()
           ]),
         ),
       ),

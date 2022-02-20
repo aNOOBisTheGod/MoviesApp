@@ -37,7 +37,10 @@ class _FilmScreenState extends State<FilmScreen> {
   Future<bool> checkFavourites() async {
     final prefs = await SharedPreferences.getInstance();
     final String? prefav = prefs.getString('favourite');
-    List fav = json.decode(prefav!);
+    if (prefav == null) {
+      return false;
+    }
+    List fav = json.decode(prefav);
     for (int e in fav) {
       if (e == widget.film.id) {
         setState(() {
@@ -55,8 +58,11 @@ class _FilmScreenState extends State<FilmScreen> {
   void changeFavourites() async {
     print(100);
     final prefs = await SharedPreferences.getInstance();
-    final String? prefav = prefs.getString('favourite');
-    List fav = json.decode(prefav!);
+    String? prefav = prefs.getString('favourite');
+    if (prefav == null) {
+      prefav = '[]';
+    }
+    List fav = json.decode(prefav);
     if (!await checkFavourites()) {
       fav.add(widget.film.id);
     } else {
@@ -69,6 +75,7 @@ class _FilmScreenState extends State<FilmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.film.id);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -152,7 +159,7 @@ class _FilmScreenState extends State<FilmScreen> {
                         padding: const EdgeInsets.all(20.0),
                         child: GridView.count(
                             physics: NeverScrollableScrollPhysics(),
-                            childAspectRatio: 3,
+                            childAspectRatio: 2,
                             shrinkWrap: true,
                             crossAxisCount: 3,
                             children: [
@@ -160,7 +167,8 @@ class _FilmScreenState extends State<FilmScreen> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
                                       genres.keys.firstWhere(
-                                          (element) => genres[element] == x),
+                                          (element) => genres[element] == x,
+                                          orElse: () => null),
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w300),

@@ -46,7 +46,7 @@ Future<List> genreSearch(page) async {
 Future<void> getGenres() async {
   genres = {};
   http.Response response = await http.get(Uri.parse(
-      'https://api.themoviedb.org/3/genre/movie/list?api_key=dab597a1412879d300c0947e376c8cda&language=en-US'));
+      'https://api.themoviedb.org/3/genre/movie/list?api_key=$apikey&language=en-US'));
   for (int i = 0; i < json.decode(response.body)['genres'].length; i++) {
     genres[json.decode(response.body)['genres'][i]['name']] =
         json.decode(response.body)['genres'][i]['id'];
@@ -56,7 +56,7 @@ Future<void> getGenres() async {
 Future<List> searchByQuery(query) async {
   genres = {};
   http.Response response = await http.get(Uri.parse(
-      'https://api.themoviedb.org/3/search/movie?api_key=dab597a1412879d300c0947e376c8cda&language=en-US&query=$query&page=1'));
+      'https://api.themoviedb.org/3/search/movie?api_key=$apikey&language=en-US&query=$query&page=1'));
   Map res = json.decode(response.body);
   List films = res['results'];
   List result = [];
