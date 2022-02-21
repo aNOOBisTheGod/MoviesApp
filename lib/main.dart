@@ -6,8 +6,10 @@ import 'package:movies/widgets/filmcard.dart';
 import './themes.dart' show ThemeModel, light, dark;
 import 'package:provider/provider.dart';
 import 'usersettings.dart';
+import './screens/introduction.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
 }
 
@@ -23,7 +25,10 @@ class MyApp extends StatelessWidget {
           theme: themeNotifier.isDark ? dark : light,
           debugShowCheckedModeBanner: false,
           home: HomePage(1),
-          routes: {FavouritesScreeen.routeName: (ctx) => FavouritesScreeen()},
+          routes: {
+            FavouritesScreeen.routeName: (ctx) => FavouritesScreeen(),
+            IntoduceScreen.routeName: (ctx) => IntoduceScreen()
+          },
         );
       }),
     );
@@ -50,6 +55,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getData() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    bool isFirstTime = sharedPreferences.getBool('firsttime') ?? true;
+    print(isFirstTime);
+    if (isFirstTime) {
+      Navigator.of(context).pushNamed(IntoduceScreen.routeName);
+    }
     films = await getPopular(widget.page);
     setState(() {
       print('loading done');
@@ -60,19 +71,32 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () => getGenres(),
-        // ),
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Here are the best daily films'),
-        ),
+        floatingActionButton: !_isLoading
+            ? FloatingActionButton(
+                onPressed: () async {
+                  SharedPreferences sharedPreferences =
+                      await SharedPreferences.getInstance();
+                  sharedPreferences.setBool('firsttime', true);
+                },
+              )
+            : null,
+        appBar: !_isLoading
+            ? AppBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                title: Text('Here are the best daily films'),
+              )
+            : null,
         drawer: AppDrawer(),
         body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(
-                color: Colors.orange,
-              ))
+            ? Container(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : Colors.black,
+                child: const Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.orange,
+                )),
+              )
             : Container(
                 color: Theme.of(context).brightness == Brightness.light
                     ? Colors.white
