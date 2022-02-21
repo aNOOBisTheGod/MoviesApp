@@ -41,7 +41,7 @@ class ThemePreferences {
 ThemeData light = ThemeData(
   accentColor: Colors.red,
   brightness: Brightness.light,
-  primaryColor: Colors.amber,
+  primaryColor: Colors.pink,
 );
 
 ThemeData dark = ThemeData(

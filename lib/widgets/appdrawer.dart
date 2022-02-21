@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:movies/screens/favourites.dart';
 import '../themes.dart' show ThemeModel;
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../screens/introduction.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -45,7 +46,31 @@ class _AppDrawerState extends State<AppDrawer> {
                   onPressed: () => Navigator.of(context)
                       .pushNamed(FavouritesScreeen.routeName),
                   child: Row(
-                    children: [Icon(Icons.star), Text('Favourites')],
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.star),
+                      ),
+                      Text('Favourites')
+                    ],
+                  )),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).primaryColor,
+                      maximumSize: Size(200, 100)),
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(IntoduceScreen.routeName),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FaIcon(FontAwesomeIcons.fireAlt),
+                      ),
+                      Text('Epic introduction')
+                    ],
                   )),
             )
           ],
