@@ -28,7 +28,11 @@ class _FilmScreenState extends State<FilmScreen> {
   }
 
   void getData() async {
-    reviews = await getReviews(widget.film.id);
+    try {
+      reviews = await getReviews(widget.film.id);
+    } catch (e) {
+      reviews = [];
+    }
     setState(() {
       _isLoading = false;
     });
@@ -95,8 +99,10 @@ class _FilmScreenState extends State<FilmScreen> {
                     children: [
                       Stack(
                         children: [
-                          Image.network('https://image.tmdb.org/t/p/w500/' +
-                              widget.film.backdrop_path),
+                          Image.network(
+                            'https://image.tmdb.org/t/p/w500/' +
+                                widget.film.backdrop_path,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
