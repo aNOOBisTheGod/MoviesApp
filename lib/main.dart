@@ -206,7 +206,13 @@ class _HomePageState extends State<HomePage> {
                       //     });
                       //   }),
                       // ),
-                      ListView.builder(
+                      GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 5 / 6,
+                          crossAxisCount:
+                              MediaQuery.of(context).size.width ~/ 300,
+                        ),
+                        padding: EdgeInsets.only(right: 30, left: 30),
                         itemCount: films!.length,
                         itemBuilder: (context, index) {
                           return FilmCard(films![index]);

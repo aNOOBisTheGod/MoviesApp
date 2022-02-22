@@ -69,6 +69,7 @@ Future<List> searchByQuery(query) async {
 }
 
 Future<List> getReviews(int id) async {
+  print(id);
   http.Response response = await http.get(Uri.parse(
       'https://api.themoviedb.org/3/movie/$id/reviews?api_key=$apikey&language=en-US&page=1'));
   Map res = json.decode(response.body);

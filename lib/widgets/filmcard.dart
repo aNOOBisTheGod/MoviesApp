@@ -26,8 +26,6 @@ class _FilmCardState extends State<FilmCard> {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Container(
-          width: MediaQuery.of(context).size.width * 0.7,
-          height: MediaQuery.of(context).size.height * 0.4,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
@@ -70,69 +68,89 @@ class _FilmCardState extends State<FilmCard> {
             ),
             AnimatedContainer(
               curve: Curves.fastOutSlowIn,
-              margin: EdgeInsets.only(
-                  bottom:
-                      preview ? MediaQuery.of(context).size.height * 0.2 : 0),
+              // margin: EdgeInsets.only(
+              //     bottom:
+              //         preview ? MediaQuery.of(context).size.height * 0.2 : 0),
               duration: Duration(milliseconds: 300),
               padding: EdgeInsets.all(30),
               width: double.infinity,
               height: double.infinity,
-              alignment: Alignment.bottomLeft,
+              alignment: !preview ? Alignment.bottomLeft : Alignment.topLeft,
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(20)),
-              child: Text(
-                widget.film.title,
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.start,
+              child: AnimatedSwitcher(
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(
+                    child: child,
+                    opacity: animation,
+                  );
+                },
+                duration: Duration(milliseconds: 100),
+                child: Text(
+                  widget.film.title,
+                  key: ValueKey(preview),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.start,
+                ),
               ),
             ),
             preview
                 ? AnimatedContainer(
                     curve: Curves.fastOutSlowIn,
                     duration: Duration(milliseconds: 300),
-                    padding: EdgeInsets.all(30),
                     width: double.infinity,
                     height: double.infinity,
                     alignment: Alignment.bottomLeft,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                '${widget.film.vote_average}',
-                                style: TextStyle(fontSize: 20),
-                                textAlign: TextAlign.start,
-                              ),
-                              Icon(Icons.star)
-                            ],
-                          ),
-                          Text(
-                            'Original language: ${widget.film.original_language}',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.start,
-                          ),
-                          Text(
-                            'Genres: ${widget.film.genre_ids.map(
-                                  (x) => genres.keys.firstWhere(
-                                      (element) => genres[element] == x,
-                                      orElse: () => '._.'),
-                                ).join(', ')}',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.start,
-                          ),
-                        ],
-                      ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
                     ),
+                    child: LayoutBuilder(builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return Container(
+                        padding: const EdgeInsets.all(30),
+                        height: constraints.maxHeight * 0.7,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  '${widget.film.vote_average}',
+                                  style: TextStyle(fontSize: 20),
+                                  textAlign: TextAlign.start,
+                                ),
+                                Icon(Icons.star)
+                              ],
+                            ),
+                            Text(
+                              'Original language: ${widget.film.original_language}',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                              textAlign: TextAlign.start,
+                            ),
+                            Text(
+                              'Genres: ${widget.film.genre_ids.map(
+                                    (x) => genres.keys.firstWhere(
+                                        (element) => genres[element] == x,
+                                        orElse: () => '._.'),
+                                  ).join(', ')}',
+                              style: TextStyle(
+                                fontSize: MediaQuery.of(context).size.width %
+                                        300 *
+                                        0.05 +
+                                    15,
+                              ),
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
                   )
                 : Container()
           ]),
