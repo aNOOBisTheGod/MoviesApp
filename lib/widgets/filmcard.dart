@@ -42,8 +42,9 @@ class _FilmCardState extends State<FilmCard> {
           child: Stack(children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                'https://image.tmdb.org/t/p/w500/${widget.film.poster}',
+              child: FadeInImage.assetNetwork(
+                placeholder: 'assets/images/preview.jpg',
+                image: 'https://image.tmdb.org/t/p/w500/${widget.film.poster}',
                 fit: BoxFit.cover,
                 width: MediaQuery.of(context).size.width,
               ),

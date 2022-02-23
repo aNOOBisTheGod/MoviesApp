@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:movies/api.dart';
+import 'package:movies/functions.dart';
 import 'package:movies/screens/favourites.dart';
+import 'package:movies/screens/home.dart';
+import 'package:movies/screens/searchbody.dart';
+import 'package:movies/screens/settings.dart';
 import 'package:movies/widgets/appdrawer.dart';
 import 'package:movies/widgets/filmcard.dart';
-import './themes.dart' show ThemeModel, light, dark;
+import './themes.dart';
 import 'package:provider/provider.dart';
 import 'usersettings.dart';
 import './screens/introduction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
+import 'package:animated_background/animated_background.dart';
 
 void main() async {
   runApp(MyApp());
@@ -24,7 +30,7 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: themeNotifier.isDark ? dark : light,
           debugShowCheckedModeBanner: false,
-          home: HomePage(1),
+          home: HomePage(),
           routes: {
             FavouritesScreeen.routeName: (ctx) => FavouritesScreeen(),
             IntoduceScreen.routeName: (ctx) => IntoduceScreen()
@@ -35,257 +41,122 @@ class MyApp extends StatelessWidget {
   }
 }
 
+Widget returnBody(index) {
+  if (index == 0) {
+    return HomeBody();
+  } else if (index == 1) {
+    return Favourites();
+  } else if (index == 2) {
+    return SearchBody();
+  } else {
+    return SettingsBody();
+  }
+}
+
 class HomePage extends StatefulWidget {
-  int page;
-  HomePage(this.page);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  List? films;
-  bool _isLoading = true;
-  bool _filters = false;
-  bool _filtersChanged = false;
-
-  @override
-  void initState() {
-    getData();
-    super.initState();
-  }
-
-  Future<void> getData() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    bool isFirstTime = sharedPreferences.getBool('firsttime') ?? true;
-    print(isFirstTime);
-    if (isFirstTime) {
-      Navigator.of(context).pushNamed(IntoduceScreen.routeName);
-    }
-    films = await getPopular(widget.page);
-    setState(() {
-      print('loading done');
-      _isLoading = false;
-    });
-  }
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: !_isLoading
-            ? FloatingActionButton(
-                onPressed: () async {
-                  SharedPreferences sharedPreferences =
-                      await SharedPreferences.getInstance();
-                  sharedPreferences.setBool('firsttime', true);
-                },
-              )
-            : null,
-        appBar: !_isLoading
-            ? AppBar(
-                backgroundColor: Theme.of(context).primaryColor,
-                title: Text('Here are the best daily films'),
-              )
-            : null,
-        drawer: AppDrawer(),
-        body: _isLoading
-            ? Container(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.white
-                    : Colors.black,
-                child: const Center(
-                    child: CircularProgressIndicator(
-                  color: Colors.orange,
-                )),
-              )
-            : Container(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.white
-                    : Colors.black,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                              onTap: () {
-                                _filtersChanged = false;
-                                getData();
-                              },
-                              child: AnimatedContainer(
-                                  alignment: Alignment.center,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: _filtersChanged
-                                        ? Theme.of(context).primaryColor
-                                        : Colors.black.withOpacity(1),
-                                  ),
-                                  height: _filtersChanged ? 40 : 0,
-                                  duration: Duration(milliseconds: 300),
-                                  child: _filtersChanged
-                                      ? Text('Implement Filters')
-                                      : Container())),
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              'Filters',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _filters = !_filters;
-                                });
-                              },
-                              icon: Icon(Icons.settings_suggest_outlined))
-                        ],
-                      ),
-                      AnimatedContainer(
-                        padding: EdgeInsets.all(20),
-                        duration: Duration(milliseconds: 300),
-                        height: !_filters
-                            ? 0
-                            : MediaQuery.of(context).size.height * 0.5,
-                        curve: Curves.fastOutSlowIn,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? Colors.grey[350]
-                                  : Colors.grey[800],
-                        ),
-                        child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                            ),
-                            itemCount: genres.keys.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    userGenres.contains(
-                                            genres[genres.keys.toList()[index]])
-                                        ? userGenres.remove(
-                                            genres[genres.keys.toList()[index]])
-                                        : userGenres.add(genres[
-                                            genres.keys.toList()[index]]);
-                                    _filtersChanged = true;
-                                    setState(() {});
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: Duration(milliseconds: 300),
-                                    decoration: BoxDecoration(
-                                        color: userGenres.contains(genres[
-                                                genres.keys.toList()[index]])
-                                            ? Theme.of(context).primaryColor
-                                            : Theme.of(context).brightness ==
-                                                    Brightness.light
-                                                ? Colors.white
-                                                : Colors.black,
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                            color: Theme.of(context)
-                                                .primaryColor)),
-                                    child: Center(
-                                        child: Text(
-                                            '${genres.keys.toList()[index]}')),
-                                  ),
-                                ),
-                              );
-                            }),
-                      ),
-                      // TextField(
-                      //   onSubmitted: (query) =>
-                      //       searchByQuery(query).then((value) {
-                      //     setState(() {
-                      //       films = value;
-                      //     });
-                      //   }),
-                      // ),
-                      GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 5 / 6,
-                          crossAxisCount:
-                              MediaQuery.of(context).size.width ~/ 300,
-                        ),
-                        padding: EdgeInsets.only(right: 30, left: 30),
-                        itemCount: films!.length,
-                        itemBuilder: (context, index) {
-                          return FilmCard(films![index]);
-                        },
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(50.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            widget.page > 1
-                                ? GestureDetector(
-                                    onTap: () => Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                HomePage(widget.page - 1))),
-                                    child: Container(
-                                      child: Icon(Icons.arrow_left),
-                                      width: 40,
-                                      height: 40,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    width: 50,
-                                    height: 50,
-                                  ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                child: Text(
-                                  widget.page.toString(),
-                                  style: TextStyle(fontSize: 24),
-                                ),
-                                width: 50,
-                                height: 50,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () => Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          HomePage(widget.page + 1))),
-                              child: Container(
-                                child: Icon(Icons.arrow_right),
-                                width: 40,
-                                height: 40,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ));
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      bottomNavigationBar: BubbleBottomBar(
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : Colors.white,
+        opacity: .2,
+        currentIndex: _currentIndex,
+        onTap: (idx) {
+          setState(() {
+            _currentIndex = idx!;
+          });
+        },
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        elevation: 8,
+        fabLocation: BubbleBottomBarFabLocation.end, //new
+        hasNotch: true, //new
+        hasInk: true, //new, gives a cute ink effect
+        inkColor: Colors.black12, //optional, uses theme color if not specified
+        items: <BubbleBottomBarItem>[
+          BubbleBottomBarItem(
+              backgroundColor: Theme.of(context).primaryColor,
+              icon: Icon(
+                Icons.dashboard,
+                color: rgetThemeColor(context),
+              ),
+              activeIcon: Icon(
+                Icons.dashboard,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text("Home")),
+          BubbleBottomBarItem(
+              backgroundColor: Theme.of(context).primaryColor,
+              icon: Icon(
+                Icons.star,
+                color: rgetThemeColor(context),
+              ),
+              activeIcon: Icon(
+                Icons.star,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text("Favourites")),
+          BubbleBottomBarItem(
+              backgroundColor: Theme.of(context).primaryColor,
+              icon: Icon(
+                Icons.search_off,
+                color: rgetThemeColor(context),
+              ),
+              activeIcon: Icon(
+                Icons.search,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text("Search")),
+          BubbleBottomBarItem(
+              backgroundColor: Theme.of(context).primaryColor,
+              icon: Icon(
+                Icons.settings,
+                color: rgetThemeColor(context),
+              ),
+              activeIcon: Icon(
+                Icons.info,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text("Settings"))
+        ],
+      ),
+      floatingActionButton:
+          Consumer(builder: (context, ThemeModel themeNotifier, child) {
+        return FloatingActionButton(
+          child: AnimatedSwitcher(
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(
+                child: child,
+                opacity: animation,
+              );
+            },
+            duration: Duration(milliseconds: 200),
+            child: Icon(
+              themeNotifier.isDark ? Icons.nightlight_round : Icons.wb_sunny,
+              key: ValueKey(themeNotifier.isDark),
+            ),
+          ),
+          onPressed: () async {
+            themeNotifier.isDark
+                ? themeNotifier.isDark = false
+                : themeNotifier.isDark = true;
+          },
+        );
+      }),
+      // drawer: AppDrawer(),
+      body: Container(
+          height: double.infinity,
+          color: getThemeColor(context),
+          child: returnBody(_currentIndex)),
+    );
   }
 }
