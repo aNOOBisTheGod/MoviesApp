@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
           theme: themeNotifier.isDark ? dark : light,
           debugShowCheckedModeBanner: false,
           home: HomePage(),
+          // home: IntoduceScreen(),
           routes: {
             FavouritesScreeen.routeName: (ctx) => FavouritesScreeen(),
             IntoduceScreen.routeName: (ctx) => IntoduceScreen()

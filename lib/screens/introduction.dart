@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:movies/functions.dart';
 import '../themes.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
+import 'dart:async';
 
 class DrawClip extends CustomClipper<Path> {
   double move = 0;
@@ -28,6 +30,30 @@ class DrawClip extends CustomClipper<Path> {
   }
 }
 
+// class ScrollClip extends CustomClipper<Path> {
+//   double move = 0;
+//   double slice = pi;
+//   ScrollClip(this.move);
+//   @override
+//   Path getClip(Size size) {
+//     Path path = Path();
+//     path.lineTo(size.width, 0);
+//     double xCenter =
+//         size.width * 0.5 + (size.width * 0.6 + 1) * sin(move * slice);
+//     double yCenter = size.height * 0.8 + 69 * cos(move * slice);
+//     path.quadraticBezierTo(xCenter, yCenter, size.width, size.height);
+//     path.quadraticBezierTo(xCenter, yCenter, size.width, size.height);
+
+//     path.lineTo(size.width, 0);
+//     return path;
+//   }
+
+//   @override
+//   bool shouldReclip(CustomClipper<Path> oldClipper) {
+//     return true;
+//   }
+// }
+
 class IntoduceScreen extends StatefulWidget {
   static const routeName = '/introduce';
 
@@ -36,8 +62,10 @@ class IntoduceScreen extends StatefulWidget {
 }
 
 class _IntoduceScreenState extends State<IntoduceScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+  Timer? timer;
   AnimationController? _controller;
+  AnimationController? _scrollController;
   int _currentStep = 0;
   bool _updated = false;
   @override
@@ -46,6 +74,13 @@ class _IntoduceScreenState extends State<IntoduceScreen>
     _controller = AnimationController(
       value: 0.0,
       duration: Duration(seconds: 25),
+      upperBound: 1,
+      lowerBound: -1,
+      vsync: this,
+    )..repeat();
+    _scrollController = AnimationController(
+      value: 0.2,
+      duration: Duration(seconds: 1),
       upperBound: 1,
       lowerBound: -1,
       vsync: this,
@@ -76,6 +111,7 @@ class _IntoduceScreenState extends State<IntoduceScreen>
   ];
   @override
   Widget build(BuildContext context) {
+    _scrollController!.value = 0.5;
     return Theme(
       data: MediaQuery.of(context).platformBrightness == Brightness.dark
           ? dark
@@ -95,6 +131,13 @@ class _IntoduceScreenState extends State<IntoduceScreen>
             : null,
         body: GestureDetector(
           onHorizontalDragEnd: (details) {
+            // Timer.periodic(const Duration(milliseconds: 5), (timer) {
+            //   _scrollController!.value += 0.01;
+            //   if (_scrollController!.value >= 0.5) {
+            //     _scrollController!.value = 0.5;
+            //     timer.cancel();
+            //   }
+            // });
             int sensitivity = 10;
             if (details.primaryVelocity! > sensitivity && _currentStep != 0) {
               _updated = true;
@@ -108,6 +151,14 @@ class _IntoduceScreenState extends State<IntoduceScreen>
               });
             }
           },
+          onHorizontalDragUpdate: (details) {
+            if (_scrollController!.value == 0.5 && details.delta.dx >= 0) {
+              return;
+            }
+            _scrollController!.value = 0.5 *
+                details.globalPosition.dx /
+                MediaQuery.of(context).size.width;
+          },
           child: Container(
             width: double.infinity,
             height: double.infinity,
@@ -117,134 +168,171 @@ class _IntoduceScreenState extends State<IntoduceScreen>
                       ? Colors.black
                       : Colors.white,
             ),
-            child: Column(children: [
-              AnimatedBuilder(
-                animation: _controller!,
-                builder: (BuildContext context, child) {
-                  return ClipPath(
-                    clipper: DrawClip(_controller!.value),
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      child: Text(
-                        'What To Watch',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 40),
-                      ),
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
-                            colors:
-                                Theme.of(context).brightness == Brightness.dark
+            child: Stack(
+              children: [
+                Column(children: [
+                  AnimatedBuilder(
+                    animation: _controller!,
+                    builder: (BuildContext context, child) {
+                      return ClipPath(
+                        clipper: DrawClip(_controller!.value),
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: double.infinity,
+                          child: Text(
+                            'What To Watch',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 40),
+                          ),
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.bottomLeft,
+                                end: Alignment.topRight,
+                                colors: Theme.of(context).brightness ==
+                                        Brightness.dark
                                     ? [Color(0xFFE0647B), Color(0xFFFCDD89)]
                                     : [Color(0xFFd25ce6), Color(0xFFf90047)]),
-                      ),
-                    ),
-                  );
-                },
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    transitionBuilder:
-                        (Widget child, Animation<double> animation) {
-                      return FadeTransition(opacity: animation, child: child);
-                    },
-                    child: Image.asset(
-                      assets[_currentStep]['image'],
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      key: ValueKey<int>(_currentStep),
-                    ),
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.05,
-                  right: MediaQuery.of(context).size.width * 0.05,
-                ),
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    transitionBuilder:
-                        (Widget child, Animation<double> animation) {
-                      return FadeTransition(
-                        child: child,
-                        opacity: animation,
+                          ),
+                        ),
                       );
                     },
-                    child: Text(
-                      assets[_currentStep]['text'],
-                      key: ValueKey<int>(_currentStep),
-                      style:
-                          TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+                  ),
+                  // ElevatedButton(
+                  //     onPressed: () {
+                  //       _scrollController?.value = -_scrollController!.value;
+                  //     },
+                  //     child: Text('123')),
+                  Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        transitionBuilder:
+                            (Widget child, Animation<double> animation) {
+                          return FadeTransition(
+                              opacity: animation, child: child);
+                        },
+                        child: Image.asset(
+                          assets[_currentStep]['image'],
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          key: ValueKey<int>(_currentStep),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              // MediaQuery.of(context).orientation != Orientation.portrait
-              //     ? Padding(
-              //         padding: EdgeInsets.only(
-              //             top: MediaQuery.of(context).size.height * 0.7,
-              //             left: MediaQuery.of(context).size.width * 0.4),
-              //         child: ElevatedButton(
-              //             style: ButtonStyle(
-              //                 maximumSize: MaterialStateProperty.all<Size>(
-              //                     Size(100, 100)),
-              //                 backgroundColor:
-              //                     MaterialStateProperty.all<Color>(
-              //                         Theme.of(context).primaryColor)),
-              //             onPressed: () {
-              //               setState(() {
-              //                 if (_currentStep != assets.length - 1)
-              //                   _currentStep += 1;
-              //               });
-              //             },
-              //             child: Row(
-              //               mainAxisAlignment: MainAxisAlignment.center,
-              //               children: [
-              //                 FaIcon(FontAwesomeIcons.chevronRight),
-              //                 FaIcon(FontAwesomeIcons.chevronRight),
-              //                 FaIcon(FontAwesomeIcons.chevronRight),
-              //               ],
-              //             )))
-              //     : Container(),
-              // MediaQuery.of(context).orientation != Orientation.portrait
-              //     ? Padding(
-              //         padding: EdgeInsets.only(
-              //             top: MediaQuery.of(context).size.height * 0.7,
-              //             left: MediaQuery.of(context).size.width * 0.1),
-              //         child: ElevatedButton(
-              //             style: ButtonStyle(
-              //                 maximumSize: MaterialStateProperty.all<Size>(
-              //                     Size(100, 100)),
-              //                 backgroundColor:
-              //                     MaterialStateProperty.all<Color>(
-              //                         Theme.of(context).primaryColor)),
-              //             onPressed: () {
-              //               setState(() {
-              //                 if (_currentStep != 0) _currentStep -= 1;
-              //               });
-              //             },
-              //             child: Row(
-              //               mainAxisAlignment: MainAxisAlignment.center,
-              //               children: [
-              //                 FaIcon(FontAwesomeIcons.chevronLeft),
-              //                 FaIcon(FontAwesomeIcons.chevronLeft),
-              //                 FaIcon(FontAwesomeIcons.chevronLeft),
-              //               ],
-              //             )),
-              //       )
-              //     : Container()
-            ]),
+
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.05,
+                      right: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        transitionBuilder:
+                            (Widget child, Animation<double> animation) {
+                          return FadeTransition(
+                            child: child,
+                            opacity: animation,
+                          );
+                        },
+                        child: Text(
+                          assets[_currentStep]['text'],
+                          key: ValueKey<int>(_currentStep),
+                          style: TextStyle(
+                              fontSize: 20, fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // MediaQuery.of(context).orientation != Orientation.portrait
+                  //     ? Padding(
+                  //         padding: EdgeInsets.only(
+                  //             top: MediaQuery.of(context).size.height * 0.7,
+                  //             left: MediaQuery.of(context).size.width * 0.4),
+                  //         child: ElevatedButton(
+                  //             style: ButtonStyle(
+                  //                 maximumSize: MaterialStateProperty.all<Size>(
+                  //                     Size(100, 100)),
+                  //                 backgroundColor:
+                  //                     MaterialStateProperty.all<Color>(
+                  //                         Theme.of(context).primaryColor)),
+                  //             onPressed: () {
+                  //               setState(() {
+                  //                 if (_currentStep != assets.length - 1)
+                  //                   _currentStep += 1;
+                  //               });
+                  //             },
+                  //             child: Row(
+                  //               mainAxisAlignment: MainAxisAlignment.center,
+                  //               children: [
+                  //                 FaIcon(FontAwesomeIcons.chevronRight),
+                  //                 FaIcon(FontAwesomeIcons.chevronRight),
+                  //                 FaIcon(FontAwesomeIcons.chevronRight),
+                  //               ],
+                  //             )))
+                  //     : Container(),
+                  // MediaQuery.of(context).orientation != Orientation.portrait
+                  //     ? Padding(
+                  //         padding: EdgeInsets.only(
+                  //             top: MediaQuery.of(context).size.height * 0.7,
+                  //             left: MediaQuery.of(context).size.width * 0.1),
+                  //         child: ElevatedButton(
+                  //             style: ButtonStyle(
+                  //                 maximumSize: MaterialStateProperty.all<Size>(
+                  //                     Size(100, 100)),
+                  //                 backgroundColor:
+                  //                     MaterialStateProperty.all<Color>(
+                  //                         Theme.of(context).primaryColor)),
+                  //             onPressed: () {
+                  //               setState(() {
+                  //                 if (_currentStep != 0) _currentStep -= 1;
+                  //               });
+                  //             },
+                  //             child: Row(
+                  //               mainAxisAlignment: MainAxisAlignment.center,
+                  //               children: [
+                  //                 FaIcon(FontAwesomeIcons.chevronLeft),
+                  //                 FaIcon(FontAwesomeIcons.chevronLeft),
+                  //                 FaIcon(FontAwesomeIcons.chevronLeft),
+                  //               ],
+                  //             )),
+                  //       )
+                  //     : Container()
+                ]),
+                // AnimatedBuilder(
+                //   animation: _scrollController!,
+                //   builder: (BuildContext context, child) {
+                //     return ClipPath(
+                //       clipper: ScrollClip(_scrollController!.value),
+                //       child: Container(
+                //         alignment: Alignment.center,
+                //         width: double.infinity,
+                //         child: Text(
+                //           'What To Watch',
+                //           style: TextStyle(
+                //               fontWeight: FontWeight.bold, fontSize: 40),
+                //         ),
+                //         height: double.infinity,
+                //         color: rgetThemeColor(context),
+                //         // decoration: BoxDecoration(
+                //         //   gradient: LinearGradient(
+                //         //       begin: Alignment.bottomLeft,
+                //         //       end: Alignment.topRight,
+                //         //       colors: Theme.of(context).brightness ==
+                //         //               Brightness.dark
+                //         //           ? [Color(0xFFE0647B), Color(0xFFFCDD89)]
+                //         //           : [Color(0xFFd25ce6), Color(0xFFf90047)]),
+                //         // ),
+                //       ),
+                //     );
+                //   },
+                // ),
+              ],
+            ),
           ),
         ),
       ),

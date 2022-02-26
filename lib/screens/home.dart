@@ -83,138 +83,129 @@ class _HomeBodyState extends State<HomeBody>
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const Center(
-            child: CircularProgressIndicator(
-            color: Colors.orange,
-          ))
-        : SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    AnimatedBuilder(
-                      animation: _controller!,
-                      builder: (BuildContext context, child) {
-                        return GestureDetector(
-                          onTap: () async {
-                            print(100);
-                            SharedPreferences sharedPreferences =
-                                await SharedPreferences.getInstance();
-                            sharedPreferences.setBool('firsttime', true);
-                          },
-                          child: ClipPath(
-                            clipper: DrawClip(_controller!.value),
-                            child: Container(
-                              height: MediaQuery.of(context).size.height * 0.5,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.bottomLeft,
-                                    end: Alignment.topRight,
-                                    colors: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? [Color(0xFFE0647B), Color(0xFFFCDD89)]
-                                        : [
-                                            Color(0xFFd25ce6),
-                                            Color(0xFFf90047)
-                                          ]),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(bottom: 60),
-                      child: Text(
-                        'WhatToWatch',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 46,
-                            fontWeight: FontWeight.bold),
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              AnimatedBuilder(
+                animation: _controller!,
+                builder: (BuildContext context, child) {
+                  return ClipPath(
+                    clipper: DrawClip(_controller!.value),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.topRight,
+                            colors:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? [Color(0xFFE0647B), Color(0xFFFCDD89)]
+                                    : [Color(0xFFd25ce6), Color(0xFFf90047)]),
                       ),
                     ),
-                    Text(
-                      'Find your movie!',
-                      style: TextStyle(color: Colors.white),
-                    )
-                  ],
+                  );
+                },
+              ),
+              Container(
+                padding: EdgeInsets.only(bottom: 60),
+                child: Text(
+                  'WhatToWatch',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 46,
+                      fontWeight: FontWeight.bold),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        'Filters',
-                        style: TextStyle(fontSize: 20),
+              ),
+              Text(
+                'Find your movie!',
+                style: TextStyle(color: Colors.white),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  'Filters',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            context: context,
-                            builder: (_) => MyBottomSheet(),
-                          ).then((value) => getData());
-                        },
-                        icon: Icon(Icons.settings_suggest_outlined))
-                  ],
-                ),
-                GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 5 / 6,
-                    crossAxisCount: MediaQuery.of(context).size.width ~/ 300,
-                  ),
-                  padding: EdgeInsets.only(right: 30, left: 30),
-                  itemCount: films!.length,
-                  itemBuilder: (context, index) {
-                    return FilmCard(films![index]);
+                      context: context,
+                      builder: (_) => MyBottomSheet(),
+                    ).then((value) => getData());
                   },
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(30.0),
-                    child: AnimatedSwitcher(
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
-                        return FadeTransition(
-                          child: child,
-                          opacity: animation,
-                        );
-                      },
-                      duration: Duration(milliseconds: 200),
-                      child: !_buttonLoading
-                          ? TextButton(
-                              key: ValueKey(_buttonLoading),
-                              onPressed: () async {
-                                _currentPage += 1;
-                                setState(() {
-                                  _buttonLoading = true;
-                                });
-                                List temp = await getPopular(_currentPage);
-                                setState(() {
-                                  _buttonLoading = false;
-                                  films!..addAll(temp);
-                                });
-                              },
-                              child: Text(
-                                'View more!',
-                                style: TextStyle(
-                                    color: Theme.of(context).primaryColor),
-                              ))
-                          : CircularProgressIndicator(
-                              key: ValueKey(_buttonLoading),
-                              color: Theme.of(context).primaryColor,
-                            ),
-                    ))
-              ],
+                  icon: Icon(Icons.settings_suggest_outlined))
+            ],
+          ),
+          if (_isLoading)
+            Center(
+                child: CircularProgressIndicator(
+              color: Colors.orange,
+            ))
+          else ...[
+            GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 5 / 6,
+                crossAxisCount: MediaQuery.of(context).size.width ~/ 300,
+              ),
+              padding: EdgeInsets.only(right: 30, left: 30),
+              itemCount: films!.length,
+              itemBuilder: (context, index) {
+                return FilmCard(films![index]);
+              },
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
             ),
-          );
+            Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: AnimatedSwitcher(
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    return FadeTransition(
+                      child: child,
+                      opacity: animation,
+                    );
+                  },
+                  duration: Duration(milliseconds: 200),
+                  child: !_buttonLoading
+                      ? TextButton(
+                          key: ValueKey(_buttonLoading),
+                          onPressed: () async {
+                            _currentPage += 1;
+                            setState(() {
+                              _buttonLoading = true;
+                            });
+                            List temp = await getPopular(_currentPage);
+                            setState(() {
+                              _buttonLoading = false;
+                              films!..addAll(temp);
+                            });
+                          },
+                          child: Text(
+                            'View more!',
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor),
+                          ))
+                      : CircularProgressIndicator(
+                          key: ValueKey(_buttonLoading),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                ))
+          ]
+        ],
+      ),
+    );
   }
 }
 
