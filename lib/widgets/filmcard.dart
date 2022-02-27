@@ -30,13 +30,10 @@ class _FilmCardState extends State<FilmCard> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).primaryColor.withAlpha(30),
-                  blurRadius: 6.0,
-                  spreadRadius: 0.0,
-                  offset: Offset(
-                    0.0,
-                    3.0,
-                  ),
+                  color: Theme.of(context)
+                      .primaryColor
+                      .withAlpha(preview ? 150 : 40),
+                  blurRadius: 20, // Shadow position
                 ),
               ]),
           child: Stack(children: [

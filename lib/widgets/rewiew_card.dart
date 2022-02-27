@@ -13,8 +13,8 @@ class ReviewCard extends StatelessWidget {
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.grey[900]
-                : Colors.grey[100],
+                ? Colors.grey[900]!.withOpacity(0.1)
+                : Colors.grey[100]!.withOpacity(0.1),
             borderRadius: BorderRadius.circular(20)),
         child: Column(
           children: [

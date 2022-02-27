@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:movies/widgets/background.dart';
 import 'package:movies/widgets/rewiew_card.dart';
 import '../models/film.dart';
 import 'package:flutter_glow/flutter_glow.dart';
@@ -82,11 +83,7 @@ class _FilmScreenState extends State<FilmScreen> {
     print(widget.film.id);
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          height: double.infinity,
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.white
-              : Colors.black,
+        child: AppBackground(
           child: _isLoading
               ? Center(
                   child: CircularProgressIndicator(

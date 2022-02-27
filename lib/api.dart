@@ -4,6 +4,12 @@ import 'models/film.dart';
 import './usersettings.dart';
 import './private.dart' show apikey;
 
+extension IsOk on http.Response {
+  bool get ok {
+    return (statusCode ~/ 100) == 2;
+  }
+}
+
 Future<List> getPopular(page) async {
   if (userGenres.length > 0) {
     return genreSearch(page);
@@ -83,3 +89,21 @@ Future<Film> getFilm(int id) async {
   Film film = Film.fromJson(res);
   return film;
 }
+
+Future<void> createSession() async {
+  http.Response response = await http.get(Uri.parse(
+      'https://api.themoviedb.org/3/authentication/guest_session/new?api_key=$apikey'));
+  Map<String, dynamic> res = json.decode(response.body);
+  session = res['guest_session_id'];
+  print(session);
+}
+
+// Future<void> rateMovie(int id, int rating) async {
+//   Map req_body = {"value": rating};
+//   http.Response response = await http.post(
+//       Uri.parse(
+//           'https://api.themoviedb.org/3/movie/$id/rating?api_key=$apikey&guest_session_id=$session'),
+//       headers: {'Content-Type': 'application/json'},
+//       body: jsonEncode(req_body));
+//   print(response.ok);
+// }
