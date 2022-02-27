@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movies/functions.dart';
-
-import 'package:movies/usersettings.dart';
-import 'package:movies/widgets/filters.dart';
+import '../widgets/filters.dart';
 import '../widgets/filmcard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api.dart';
@@ -131,23 +128,32 @@ class _HomeBodyState extends State<HomeBody>
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Text(
-                  'Filters',
+                  'Select genres',
                   style: TextStyle(fontSize: 20),
                 ),
               ),
               IconButton(
                   onPressed: () {
+                    // showModalBottomSheet(
+                    //   barrierColor: Colors.black.withAlpha(1),
+                    //   shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(20.0),
+                    //   ),
+                    //   context: context,
+                    //   builder: (_) => MyBottomSheet(),
+                    // ).then((value) => getData());
                     showModalBottomSheet(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      context: context,
-                      builder: (_) => MyBottomSheet(),
-                    ).then((value) => getData());
+                            context: context,
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => MyBottomSheet())
+                        .then((value) => getData());
                   },
                   icon: Icon(Icons.settings_suggest_outlined))
             ],
           ),
+          // ElevatedButton(
+          //     onPressed: () => rateMovie(200, 8), child: Text('test')),
           if (_isLoading)
             Center(
                 child: CircularProgressIndicator(
@@ -203,71 +209,6 @@ class _HomeBodyState extends State<HomeBody>
                         ),
                 ))
           ]
-        ],
-      ),
-    );
-  }
-}
-
-class MyBottomSheet extends StatefulWidget {
-  @override
-  _MyBottomSheetState createState() => _MyBottomSheetState();
-}
-
-class _MyBottomSheetState extends State<MyBottomSheet> {
-  bool _flag = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(20),
-            // height: MediaQuery.of(context).size.height * 0.5,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: getThemeColor(context)),
-            child: GridView.builder(
-                physics: ScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                ),
-                itemCount: genres.keys.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        userGenres.contains(genres[genres.keys.toList()[index]])
-                            ? userGenres
-                                .remove(genres[genres.keys.toList()[index]])
-                            : userGenres
-                                .add(genres[genres.keys.toList()[index]]);
-
-                        setState(() {});
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        decoration: BoxDecoration(
-                            color: userGenres.contains(
-                                    genres[genres.keys.toList()[index]])
-                                ? Theme.of(context).primaryColor
-                                : Theme.of(context).brightness ==
-                                        Brightness.light
-                                    ? Colors.white
-                                    : Colors.black,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor)),
-                        child: Center(
-                            child: Text('${genres.keys.toList()[index]}')),
-                      ),
-                    ),
-                  );
-                }),
-          ),
         ],
       ),
     );

@@ -48,4 +48,6 @@ ThemeData dark = ThemeData(
   accentColor: Colors.pink,
   brightness: Brightness.dark,
   primaryColor: Colors.orange[800],
+  bottomSheetTheme:
+      BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
 );
