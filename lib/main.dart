@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         backgroundColor: getThemeColor(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         bottomNavigationBar: BubbleBottomBar(
-          backgroundColor: getThemeColor(context),
+          backgroundColor: Colors.transparent,
           opacity: .2,
           currentIndex: _currentIndex,
           onTap: (idx) {
@@ -131,6 +131,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         floatingActionButton:
             Consumer(builder: (context, ThemeModel themeNotifier, child) {
           return FloatingActionButton(
+            tooltip: "Change Theme",
             child: AnimatedSwitcher(
               transitionBuilder: (Widget child, Animation<double> animation) {
                 return FadeTransition(

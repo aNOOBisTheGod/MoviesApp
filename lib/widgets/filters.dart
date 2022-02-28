@@ -82,7 +82,10 @@ class _MyBottomSheetState extends State<MyBottomSheet> {
                             //         : Colors.transparent)
                           ),
                           child: Center(
-                              child: Text('${genres.keys.toList()[index]}')),
+                              child: Text(
+                            '${genres.keys.toList()[index]}',
+                            style: TextStyle(color: Colors.white),
+                          )),
                         ),
                       ),
                     );
