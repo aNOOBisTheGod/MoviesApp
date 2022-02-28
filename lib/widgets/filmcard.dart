@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:movies/screens/filmscreen.dart';
 import '../models/film.dart';
 import '../usersettings.dart' show genres;
@@ -19,6 +20,7 @@ class _FilmCardState extends State<FilmCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onLongPress: () => setState(() {
+        HapticFeedback.vibrate();
         preview = !preview;
       }),
       onTap: () => Navigator.push(context,
