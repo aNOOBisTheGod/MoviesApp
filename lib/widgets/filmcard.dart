@@ -41,11 +41,17 @@ class _FilmCardState extends State<FilmCard> {
           child: Stack(children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: FadeInImage.assetNetwork(
-                placeholder: 'assets/images/preview.jpg',
-                image: 'https://image.tmdb.org/t/p/w500/${widget.film.poster}',
-                fit: BoxFit.cover,
-                width: MediaQuery.of(context).size.width,
+              child: ColorFiltered(
+                colorFilter: Theme.of(context).brightness != Brightness.dark
+                    ? ColorFilter.mode(Colors.white, BlendMode.colorBurn)
+                    : ColorFilter.srgbToLinearGamma(),
+                child: FadeInImage.assetNetwork(
+                  placeholder: 'assets/images/preview.jpg',
+                  image:
+                      'https://image.tmdb.org/t/p/w500/${widget.film.poster}',
+                  fit: BoxFit.cover,
+                  width: MediaQuery.of(context).size.width,
+                ),
               ),
             ),
             AnimatedContainer(
