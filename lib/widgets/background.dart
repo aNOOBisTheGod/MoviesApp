@@ -17,7 +17,7 @@ class _AppBackgroundState extends State<AppBackground> {
           colorFilter: Theme.of(context).brightness != Brightness.dark
               ? ColorFilter.matrix([
                   -1,
-                  0,
+                  255,
                   0,
                   0,
                   255,
@@ -39,8 +39,10 @@ class _AppBackgroundState extends State<AppBackground> {
                 ])
               : ColorFilter.srgbToLinearGamma(),
           child: Image.asset(
-            'assets/images/preview.jpg',
+            'assets/images/water.jpg',
             height: double.infinity,
+            width: double.infinity,
+            fit: BoxFit.fill,
           )),
       GlassmorphicContainer(
         width: double.infinity,
