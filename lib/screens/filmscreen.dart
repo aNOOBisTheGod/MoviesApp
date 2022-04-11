@@ -108,11 +108,22 @@ class _FilmScreenState extends State<FilmScreen> {
                                   onPressed: () => Navigator.of(context).pop(),
                                   icon: Icon(Icons.close)),
                               IconButton(
-                                  color: _isFavourite
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.grey[600],
                                   onPressed: () => changeFavourites(),
-                                  icon: Icon(Icons.star)),
+                                  icon: AnimatedSwitcher(
+                                    duration: const Duration(microseconds: 300),
+                                    transitionBuilder: (Widget child,
+                                        Animation<double> animation) {
+                                      return FadeTransition(
+                                          opacity: animation, child: child);
+                                    },
+                                    child: Icon(
+                                      Icons.star,
+                                      key: ValueKey<bool>(_isFavourite),
+                                      color: _isFavourite
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.grey[600],
+                                    ),
+                                  )),
                             ],
                           ),
                         ],

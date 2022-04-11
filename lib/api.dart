@@ -51,6 +51,7 @@ Future<List> genreSearch(page) async {
 
 Future<void> getGenres() async {
   genres = {};
+  print('getting genres...');
   http.Response response = await http.get(Uri.parse(
       'https://api.themoviedb.org/3/genre/movie/list?api_key=$apikey&language=en-US'));
   for (int i = 0; i < json.decode(response.body)['genres'].length; i++) {
@@ -60,7 +61,6 @@ Future<void> getGenres() async {
 }
 
 Future<List> searchByQuery(query) async {
-  genres = {};
   http.Response response = await http.get(Uri.parse(
       'https://api.themoviedb.org/3/search/movie?api_key=$apikey&language=en-US&query=$query&page=1'));
   Map res = json.decode(response.body);
