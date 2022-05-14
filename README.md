@@ -37,3 +37,5 @@ Then app reduces data into lists of objects and maps and shows it to user but wr
 </ul>
 
 ### Also if you have any suggestions about this application or you found a bug, DM me in discord: aNOOBis#9315
+
+### There might be some issues with API in some countries, you can use the VPN servers to fix 'em
